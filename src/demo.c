@@ -2,7 +2,6 @@
  * @file demo.c
  * @author Matúš Ďurica (mtsdurica@gmail.com)
  * @brief Contains implementation of a short demo to showcase the BSP dungeon generator
- * @version 0.1
  * @date 2023-07-16
  *
  * @copyright Copyright (c) 2023

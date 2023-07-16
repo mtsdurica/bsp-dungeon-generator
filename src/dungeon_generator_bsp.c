@@ -2,7 +2,6 @@
  * @file dungeon_generator_bsp.c
  * @author Matúš Ďurica (mtsdurica@gmail.com)
  * @brief Contains implementation of the BSP dungeon generator
- * @version 0.1
  * @date 2023-07-16
  *
  * @copyright Copyright (c) 2023
@@ -31,6 +30,7 @@ static bool points_equal(point *p1, point *p2)
  * @brief Draw horizontal wall
  *
  * @param w Wall to be drawn
+ * @param map Map struct where the wall will be drawn to
  */
 static void draw_horizontal_wall(wall *w, map *map)
 {
@@ -48,6 +48,7 @@ static void draw_horizontal_wall(wall *w, map *map)
  * @brief Draw vertical wall
  *
  * @param w Wall to be drawn
+ * @param map Map struct where the wall will be drawn to
  */
 static void draw_vertical_wall(wall *w, map *map)
 {
@@ -91,22 +92,21 @@ static UINT_CHANGEABLE random_in_range(UINT_CHANGEABLE min, UINT_CHANGEABLE max)
     return (rand() % (deviation * 2 + 1)) + (middle - deviation);
 }
 
-static bool generate_vertical_split(room *, map *map);
+static void generate_vertical_split(room *, map *);
 
 /**
  * @brief Generate horizontal split, splitting the parent room into 2 children
  *
  * @param r Parent room
- * @return true Ignored
- * @return false When ending recursion
+ * @param map Map struct where the split will be generated to
  */
-static bool generate_horizontal_split(room *r, map *map)
+static void generate_horizontal_split(room *r, map *map)
 {
     if (r == NULL)
-        return false;
+        return;
 
     if (r->left.start.y + (PSEUDO_ROOM_SIZE / 2) >= r->left.end.y - (PSEUDO_ROOM_SIZE / 2))
-        return false;
+        return;
 
     UINT_CHANGEABLE rand_y =
         random_in_range(r->left.start.y + (PSEUDO_ROOM_SIZE / 2), r->left.end.y - (PSEUDO_ROOM_SIZE / 2));
@@ -126,28 +126,24 @@ static bool generate_horizontal_split(room *r, map *map)
 
     generate_vertical_split(&child2, map);
     child2.center = get_child_center(&child2);
-
+    // Drawing path between two sister rooms
     for (int i = child2.center.y; i > child1.center.y; i--)
         map->tiles[child2.center.x][i] = Walkable;
-
-    refresh();
-    return true;
 }
 
 /**
  * @brief Generate horizontal split, splitting the parent room into 2 children
  *
  * @param r Parent room
- * @return true Ignored
- * @return false When ending recursion
+ * @param map Map struct where the split will be generated to
  */
-static bool generate_vertical_split(room *r, map *map)
+static void generate_vertical_split(room *r, map *map)
 {
     if (r == NULL)
-        return false;
+        return;
 
     if (r->top.start.x + PSEUDO_ROOM_SIZE >= r->top.end.x - PSEUDO_ROOM_SIZE)
-        return false;
+        return;
 
     UINT_CHANGEABLE rand_x = random_in_range(r->top.start.x + PSEUDO_ROOM_SIZE, r->top.end.x - PSEUDO_ROOM_SIZE);
 
@@ -167,16 +163,15 @@ static bool generate_vertical_split(room *r, map *map)
 
     generate_horizontal_split(&child2, map);
     child2.center = get_child_center(&child2);
-
+    // Drawing path between two sister rooms
     for (int i = child2.center.x; i > child1.center.x; i--)
         map->tiles[i][child2.center.y] = Walkable;
-
-    return true;
 }
 
 /**
  * @brief Initialize base room
  *
+ * @param map Map struct where the base room will be initialized to
  * @return room Base room
  */
 static room initialize_base(map *map)

@@ -2,7 +2,6 @@
  * @file dungeon_generator_bsp.h
  * @author Matúš Ďurica (mtsdurica@gmail.com)
  * @brief Contains the data structs and public functions of the library
- * @version 0.1
  * @date 2023-07-16
  *
  * @copyright Copyright (c) 2023
