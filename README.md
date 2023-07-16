@@ -71,7 +71,7 @@ Map can then be printed using:
 dump_dungeon(&generated_map);
 ```
 ### Important note:
- Map is drawn using ncurses. If you desire to draw it other way, alter the ```dumb_dungeon()``` function.
+ Map is drawn using ncurses. If you desire to draw it other way, alter the ```dump_dungeon()``` function.
 
 ```C++
 void dump_dungeon(map *map)
