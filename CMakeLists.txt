@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.0)
+set(CMAKE_C_FLAGS "-lncurses")
+project(demo C)
+include_directories(include)
+file(GLOB SOURCES "src/*.c")
+add_executable(${PROJECT_NAME} ${SOURCES})
